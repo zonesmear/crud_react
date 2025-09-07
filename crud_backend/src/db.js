@@ -2,16 +2,15 @@ import pg from "pg";
 import env from "dotenv";
 
 env.config();
-const db = new pg.Client({
+
+const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } // required on Render
+  ssl: { rejectUnauthorized: false } // required for Render
 });
 
-db.connect();
+pool.on("error", (err) => {
+  console.error("Database connection error:", err);
+  process.exit(-1);
+});
 
-db.on ("error", (err) => {
-    console.error("Database connection error:", err);
-    process.exit(-1);
-}   );
-
-export const query = (text, params) => db.query(text, params);  
+export const query = (text, params) => pool.query(text, params);
