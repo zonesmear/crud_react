@@ -8,5 +8,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/crud_react/', // 👈 put it here, outside plugins
+  base: '/', // 👈 root path
 })
