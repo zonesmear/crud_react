@@ -5,18 +5,20 @@ export default function TableList({ handleOpen, searchTerm }) {
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("id-asc");
   // Fetch clients from backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://crud-react-g32u.onrender.com/api/clients");
-        setTableData(response.data);
-      } catch (err) {
-        setError("Error fetching data");
-        console.error("Error fetching data:", err);
-      }
-    };
-    fetchData();
-  }, []);
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://crud-react-g32u.onrender.com/api/clients"
+      );
+      setTableData(response.data.data); // <-- access the inner data array
+    } catch (err) {
+      setError("Error fetching data");
+      console.error("Error fetching data:", err);
+    }
+  };
+  fetchData();
+}, []);
 
   // Filter table data
   let filteredData = tableData.filter(
