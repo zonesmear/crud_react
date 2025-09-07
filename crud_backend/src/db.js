@@ -9,7 +9,6 @@ const db = new pg.Client({
 
 db.connect();
 
-db.connect();
 db.on ("error", (err) => {
     console.error("Database connection error:", err);
     process.exit(-1);
