@@ -15,9 +15,9 @@ pool.on("error", (err) => {
 
 export const query = async (text, params) => {
   try {
-    return await db.query(text, params);
+    return await pool.query(text, params);   // ✅ use pool, not db
   } catch (err) {
     console.error("Database error:", err);
-    throw new Error("Database error");  // prevents leaking details
+    throw new Error("Database error");
   }
 };

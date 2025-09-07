@@ -3,10 +3,10 @@ import * as clientService from "../services/clientServices.js";
 export const getClients = async (req, res) => {
   try {
     const clients = await clientService.getClients();
-    res.status(200).json(clients); // ✅ just return the array
+    res.status(200).json({ status: 'success', data: clients });
   } catch (err) {
     console.error("Error fetching clients:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ status: 'error', message: "Internal Server Error" });
   }
 };
 
