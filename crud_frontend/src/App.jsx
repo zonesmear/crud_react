@@ -4,26 +4,12 @@ import ModalForm from "./components/Modalform";
 import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
 import axios from "axios";
-import cors from 'cors';
-app.use(cors());
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [searchTerm, setSearchTerm] = useState("");
   const [clientData, setClientData] = useState(null);
-const [clients, setClients] = useState([]);
-
-const fetchClients = async () => {
-  try {
-    const response = await axios.get("https://crud-react-g32u.onrender.com/api/clients");
-    setClients(response.data.data);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-useEffect(() => { fetchClients(); }, []);
 
   // Accept both mode and client from TableList
   const handleOpen = (mode, client = null) => {

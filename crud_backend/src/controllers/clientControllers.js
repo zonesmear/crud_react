@@ -1,5 +1,6 @@
 import * as clientService from "../services/clientServices.js";
-
+import cors from "cors";
+app.use(cors());
 export const getClients = async (req, res) => {
   try {
     const clients = await clientService.getClients();

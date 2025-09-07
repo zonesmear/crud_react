@@ -1,6 +1,7 @@
 import pg from "pg";
 import env from "dotenv";
-
+import cors from "cors";
+app.use(cors());
 env.config();
 
 const pool = new pg.Pool({

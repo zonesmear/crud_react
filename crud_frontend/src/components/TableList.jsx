@@ -1,7 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import cors from 'cors';
-app.use(cors());
 export default function TableList({ handleOpen, searchTerm }) {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null);

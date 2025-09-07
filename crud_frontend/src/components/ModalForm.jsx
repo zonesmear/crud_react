@@ -1,8 +1,7 @@
 import { useState, useEffect  } from "react";
-import cors from 'cors';
 export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData }) {
   if (!isOpen) return null; // Don’t render modal when closed
-app.use(cors());
+
    const [name, setName] = useState("");
   const [job, setJob] = useState("");
   const [age, setAge] = useState("");
