@@ -11,7 +11,7 @@ export default function TableList({ handleOpen, searchTerm }) {
       const response = await axios.get(
         "https://crud-react-g32u.onrender.com/api/clients"
       );
-      setTableData(response.data.data); // <-- access the inner data array
+      setTableData(response.data);
     } catch (err) {
       setError("Error fetching data");
       console.error("Error fetching data:", err);
