@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    
   ],
+  base: '/crud_react/', // 👈 put it here, outside plugins
 })
