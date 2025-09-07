@@ -13,4 +13,11 @@ pool.on("error", (err) => {
   process.exit(-1);
 });
 
-export const query = (text, params) => pool.query(text, params);
+export const query = async (text, params) => {
+  try {
+    return await db.query(text, params);
+  } catch (err) {
+    console.error("Database error:", err);
+    throw new Error("Database error");  // prevents leaking details
+  }
+};
