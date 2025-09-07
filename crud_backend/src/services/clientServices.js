@@ -1,6 +1,5 @@
 import { query } from "../db.js";
-import cors from "cors";
-app.use(cors());
+
 export const getClients = async () => {
   try {
     const { rows } = await query("SELECT * FROM clients_tb ORDER BY id ASC");
