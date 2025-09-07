@@ -5,27 +5,20 @@ export default function TableList({ handleOpen, searchTerm }) {
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("id-asc");
   // Fetch clients from backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://crud-react-g32u.onrender.com/api/clients"
-        );
-        setTableData(response.data);
-      } catch (err) {
-        setError("Error fetching data");
-        if (err.response) {
-          console.error("Server responded with status:", err.response.status);
-          console.error("Response data:", err.response.data);
-        } else if (err.request) {
-          console.error("No response received:", err.request);
-        } else {
-          console.error("Request setup error:", err.message);
-        }
-      }
-    };
-    fetchData();
-  }, []);
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://crud-react-g32u.onrender.com/api/clients"
+      );
+      setTableData(response.data);
+    } catch (err) {
+      setError("Error fetching data");
+      console.error("Error fetching data:", err);
+    }
+  };
+  fetchData();
+}, []);
 
   // Filter table data
   let filteredData = tableData.filter(
@@ -52,26 +45,27 @@ export default function TableList({ handleOpen, searchTerm }) {
 
   return (
     <>
-      <div className="flex justify-between items-center mt-5">
-        {/* Title */}
-        <h2 className="text-2xl font-bold ml-10">Client List</h2>
+   <div className="flex justify-between items-center mt-5">
+  {/* Title */}
+  <h2 className="text-2xl font-bold ml-10">Client List</h2>
 
-        {/* Sort Controls */}
-        <div className="flex items-center mr-10">
-          <select
-            className="select select-bordered"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
-            <option value="id-desc">Descend</option>
-            <option value="id-asc">Ascend</option>
-            <option value="name-asc">A → Z</option>
-            <option value="name-desc">Z → A</option>
-          </select>
-        </div>
-      </div>
+  {/* Sort Controls */}
+  <div className="flex items-center mr-10">
+    
+    <select
+      className="select select-bordered"
+      value={sortOption}
+      onChange={(e) => setSortOption(e.target.value)}
+    >
+      <option value="id-desc">Descend</option>
+      <option value="id-asc">Ascend</option>
+      <option value="name-asc">A → Z</option>
+      <option value="name-desc">Z → A</option>
+    </select>
+  </div>
+</div>
 
-      <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-5 ml-5 mr-5">
+<div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-5 ml-5 mr-5">
         {error && <p className="text-red-500">{error}</p>}
         <table className="table table-zebra">
           <thead className="bg-base-200 text-base-content ">
@@ -121,6 +115,7 @@ export default function TableList({ handleOpen, searchTerm }) {
           </tbody>
         </table>
       </div>
+      
     </>
   );
 }
