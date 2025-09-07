@@ -9,7 +9,7 @@ export default function TableList({ handleOpen, searchTerm }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/clients");
+        const response = await axios.get("https://crud-react-g32u.onrender.com/api/clients");
         setTableData(response.data);
       } catch (err) {
         setError("Error fetching data");

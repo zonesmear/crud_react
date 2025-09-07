@@ -22,7 +22,7 @@ function App() {
     if (modalMode === "add") {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/clients",
+          "https://crud-react-g32u.onrender.com/api/clients",
           newClient
         );
         console.log("Client added:", response.data);
@@ -33,7 +33,7 @@ function App() {
     } else if (modalMode === "edit") {
       try {
         const response = await axios.put(
-          `http://localhost:3000/api/clients/${newClient.id}`,
+          `https://crud-react-g32u.onrender.com/api/clients/${newClient.id}`,
           newClient
         );
         console.log("Client updated:", response.data);
@@ -44,7 +44,7 @@ function App() {
     } else if (modalMode === "delete") {
       try {
         const response = await axios.delete(
-          `http://localhost:3000/api/clients/${clientData.id}`
+          `https://crud-react-g32u.onrender.com/api/clients/${clientData.id}`
         );
         console.log("Client deleted:", response.data);
       } catch (error) {
