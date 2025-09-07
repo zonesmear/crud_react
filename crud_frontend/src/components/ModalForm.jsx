@@ -1,6 +1,6 @@
 import { useState, useEffect  } from "react";
 export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData }) {
-  if (!isOpen) return null; // Don’t render modal when closed
+   // Don’t render modal when closed
 
    const [name, setName] = useState("");
   const [job, setJob] = useState("");
@@ -65,7 +65,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
 };
 
 
-
+  if (!isOpen) return null; // don’t render if closed
   
   return (
     <>
