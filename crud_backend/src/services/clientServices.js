@@ -16,7 +16,7 @@ export const addClients = async (clientData) => {
   try {
     // Insert into DB
     const { rows } = await query(
-      "INSERT INTO clients_tb (name, job, age, email, password, user_level, isactive, create_date) VALUES ($1, $2, $3, $4, $5, $6, $7 CURRENT_TIMESTAMP ) RETURNING *",
+      "INSERT INTO clients_tb (name, job, age, email, password, user_level, isactive, create_date) VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP ) RETURNING *",
       [name, job, age, email, password, user_level, isactive ?? true ] // default to true
     );
 
