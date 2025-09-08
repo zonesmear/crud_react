@@ -11,13 +11,13 @@ export const getClients = async () => {
 };
 
 export const addClients = async (clientData) => {
-  const { name, job, age, email, user_level, isactive } = clientData;
+  const { name, job, age, email, password, user_level, isactive } = clientData;
 
   try {
     // Insert into DB
     const { rows } = await query(
-      "INSERT INTO clients_tb (name, job, age, email, user_level, isactive, create_date) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP ) RETURNING *",
-      [name, job, age, email, user_level, isactive ?? true ] // default to true
+      "INSERT INTO clients_tb (name, job, age, email, password, user_level, isactive, create_date) VALUES ($1, $2, $3, $4, $5, $6, $7 CURRENT_TIMESTAMP ) RETURNING *",
+      [name, job, age, email, password, user_level, isactive ?? true ] // default to true
     );
 
     const newClient = rows[0];
@@ -37,12 +37,12 @@ export const addClients = async (clientData) => {
 };
 
 export const updateClient = async (id, clientData) => {
-  const { name, job, age, email, user_level, isactive } = clientData;
+  const { name, job, age, email, user_level, password, isactive } = clientData;
 
   try {
     const { rows } = await query(
-      "UPDATE clients_tb SET name=$1, job=$2, age=$3, email=$4, user_level=$5, isactive=$6 WHERE id=$7 RETURNING *",
-      [name, job, age, email, user_level, isactive, id]
+      "UPDATE clients_tb SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7 WHERE id=$8 RETURNING *",
+      [name, job, age, email, user_level, password, isactive, id]
     );
     return rows[0];
   } catch (err) {

@@ -10,6 +10,7 @@ export default function ModalForm({
   const [job, setJob] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [user_level, setUserLevel] = useState("");
   const [status, setStatus] = useState(false);
 
@@ -24,6 +25,7 @@ export default function ModalForm({
       setJob(clientData.job || "");
       setAge(clientData.age || "");
       setEmail(clientData.email || "");
+      setPassword(clientData.password || "");
       setUserLevel(clientData.user_level || "");
       setStatus(clientData.isactive || false);
     } else if (mode === "add") {
@@ -32,6 +34,7 @@ export default function ModalForm({
       setJob("");
       setAge("");
       setEmail("");
+      setPassword("");
       setUserLevel("");
       setStatus(false);
     }
@@ -47,6 +50,7 @@ export default function ModalForm({
           job,
           age,
           email,
+          password,
           user_level,
           isactive: status,
         };
@@ -59,6 +63,7 @@ export default function ModalForm({
           job,
           age,
           email,
+          password,
           user_level,
           isactive: status,
         };
@@ -141,6 +146,16 @@ export default function ModalForm({
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Password
+                  <input
+                    type="password"
+                    placeholder="Type here"
+                    className="grow"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </label>
                 <select
                   value={user_level}
                   onChange={(e) => setUserLevel(e.target.value)}
@@ -205,6 +220,16 @@ export default function ModalForm({
                     className="grow"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Password
+                  <input
+                    type="password"
+                    placeholder="Type here"
+                    className="grow"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </label>
                 
