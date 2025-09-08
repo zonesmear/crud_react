@@ -1,8 +1,12 @@
-import { useState, useEffect  } from "react";
-export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData }) {
-  
-
-   const [name, setName] = useState("");
+import { useState, useEffect } from "react";
+export default function ModalForm({
+  isOpen,
+  onClose,
+  onSubmit,
+  mode,
+  clientData,
+}) {
+  const [name, setName] = useState("");
   const [job, setJob] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
@@ -33,170 +37,211 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
     }
   }, [mode, clientData]);
 
-
-
   const handleSubmit = async (e) => {
-  e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); // Prevent default form submission
 
-  try {
-    if (mode === "add") {
-      const clientPayload = { name, job, age, email, user_level, isactive: status };
-      await onSubmit(clientPayload);
-      console.log("Client added:", clientPayload);
-
-    } else if (mode === "edit") {
-      const updatedClientData = { 
-        id: clientData.id, 
-        name, 
-        job, 
-        age, 
-        email, 
-        user_level, 
-        isactive: status 
-      };
-      await onSubmit(updatedClientData);
-      console.log("Client updated:", updatedClientData);
-
-    } else if (mode === "delete") {
-      await onSubmit(clientData.id); // pass only the id
-      console.log("Client deleted:", clientData.id);
+    try {
+      if (mode === "add") {
+        const clientPayload = {
+          name,
+          job,
+          age,
+          email,
+          user_level,
+          isactive: status,
+        };
+        await onSubmit(clientPayload);
+        console.log("Client added:", clientPayload);
+      } else if (mode === "edit") {
+        const updatedClientData = {
+          id: clientData.id,
+          name,
+          job,
+          age,
+          email,
+          user_level,
+          isactive: status,
+        };
+        await onSubmit(updatedClientData);
+        console.log("Client updated:", updatedClientData);
+      } else if (mode === "delete") {
+        await onSubmit(clientData.id); // pass only the id
+        console.log("Client deleted:", clientData.id);
+      }
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
     }
-  } catch (error) {
-    console.error("Error in handleSubmit:", error);
-  }
 
-  onClose();
-};
-
+    onClose();
+  };
 
   if (!isOpen) return null; // don’t render if closed
-  
+
   return (
     <>
-    <dialog id="my_modal_3" className="modal" open={isOpen}>
-      <div className="modal-box relative">
-        {/* Close button */}
-        <button
-          type="button"
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={onClose}
-        >
-          ✕
-        </button>
+      <dialog id="my_modal_3" className="modal" open={isOpen}>
+        <div className="modal-box relative">
+          {/* Close button */}
+          <button
+            type="button"
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={onClose}
+          >
+            ✕
+          </button>
 
-        {/* Title */}
-        <h3 className="font-bold text-lg mb-4">
-          {mode === "add"
-            ? "Add Client"
-            : mode === "edit"
-            ? "Edit Client"
-            : "Delete Client"}
-        </h3>
-        {mode === "add" ? (
-          
-          <form method = "dialog" onSubmit={handleSubmit}>
-            <div className="flex flex-col justify-center items-center mb-4">
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Name
-                <input type="text" placeholder="Type here" className="grow" value={name} onChange={(e) => setName(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Job
-                <input type="text" placeholder="Type here" className="grow" value = {job} onChange={(e) => setJob(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Age
-                <input type="number" placeholder="Type here" className="grow" value = {age} onChange={(e) => setAge(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Email
-                <input type="email" placeholder="Type here" className="grow" value={email} onChange={(e) => setEmail(e.target.value)}/>
-              </label>
-              <select
-                value={user_level} onChange={(e) => setUserLevel(e.target.value)}
-                className="select select-bordered w-80 mt-2"
-              >
-                <option>Manager</option>
-                <option>Staff</option>
-              </select>
+          {/* Title */}
+          <h3 className="font-bold text-lg mb-4">
+            {mode === "add"
+              ? "Add Client"
+              : mode === "edit"
+              ? "Edit Client"
+              : "Delete Client"}
+          </h3>
+          {mode === "add" ? (
+            <form method="dialog" onSubmit={handleSubmit}>
+              <div className="flex flex-col justify-center items-center mb-4">
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Name
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    className="grow"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Job
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    className="grow"
+                    value={job}
+                    onChange={(e) => setJob(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Age
+                  <input
+                    type="number"
+                    placeholder="Type here"
+                    className="grow"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Email
+                  <input
+                    type="email"
+                    placeholder="Type here"
+                    className="grow"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+                <select
+                  value={user_level}
+                  onChange={(e) => setUserLevel(e.target.value)}
+                  className="select select-bordered w-80 mt-2"
+                >
+                  <option>Manager</option>
+                  <option>Staff</option>
+                </select>
 
-               <select
-                value={status ? "Active" : "Inactive"}
-                onChange={handleStatusChange}
-                className="select select-bordered w-80 mt-2"
-              >
-                <option>Inactive</option>
-                <option>Active</option>
-              </select>
+                <select
+                  value={status ? "Active" : "Inactive"}
+                  onChange={handleStatusChange}
+                  className="select select-bordered w-80 mt-2"
+                >
+                  <option>Inactive</option>
+                  <option>Active</option>
+                </select>
 
-             
-               <button type="submit" className="btn btn-primary mt-10">
-                {mode === "add" ? "Add Client" : "Save Changes"}
-              </button>
-            </div>
+                <button type="submit" className="btn btn-primary mt-10">
+                  {mode === "add" ? "Add Client" : "Save Changes"}
+                </button>
+              </div>
             </form>
-         
-        ) : mode === "edit" ? (
-         
-            <form method = "dialog" onSubmit={handleSubmit}>
-            <div className="flex flex-col justify-center items-center mb-4">
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Name
-                <input type="text" placeholder="Type here" className="grow" value={name} onChange={(e) => setName(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Job
-                <input type="text" placeholder="Type here" className="grow" value = {job} onChange={(e) => setJob(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Age
-                <input type="number" placeholder="Type here" className="grow" value = {age} onChange={(e) => setAge(e.target.value)}/>
-              </label>
-              <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
-                Email
-                <input type="email" placeholder="Type here" className="grow" value={email} onChange={(e) => setEmail(e.target.value)}/>
-              </label>
-
-              <select
-                value={user_level} onChange={(e) => setUserLevel(e.target.value)}
-                className="select select-bordered w-80 mt-2"
-              >
-                <option>Manager</option>
-                <option>Staff</option>
-              </select>
-
-              <select
-                defaultValue="Pick a color"
-                value={status ? "Active" : "Inactive"}
-                onChange={handleStatusChange}
-                className="select select-bordered w-80 mt-2"
-              >
-                Status
-                <option className="grow">Inactive</option>
-                <option className="grow">Active</option>
-              </select>
-              <button className="btn btn-secondary mt-10" onClick={onSubmit}>
-                Save Changes
-              </button>
-            </div>
+          ) : mode === "edit" ? (
+            <form method="dialog" onSubmit={handleSubmit}>
+              <div className="flex flex-col justify-center items-center mb-4">
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Name
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    className="grow"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Job
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    className="grow"
+                    value={job}
+                    onChange={(e) => setJob(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Age
+                  <input
+                    type="number"
+                    placeholder="Type here"
+                    className="grow"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
+                  Email
+                  <input
+                    type="email"
+                    placeholder="Type here"
+                    className="grow"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+                <select
+                  value={user_level}
+                  onChange={(e) => setUserLevel(e.target.value)}
+                  className="select select-bordered w-80 mt-2"
+                >
+                  <option>Manager</option>
+                  <option>Staff</option>
+                </select>
+                <select
+                  value={status ? "Active" : "Inactive"}
+                  onChange={handleStatusChange}
+                  className="select select-bordered w-80 mt-2"
+                >
+                  <option>Inactive</option>
+                  <option>Active</option>
+                </select>{" "}
+                <button type="submit" className="btn btn-secondary mt-10">
+                  {mode === "edit" ? "Save Changes" : "Add Client"}
+                </button>
+              </div>
             </form>
-          
-        ) : (
-        
-            <form method = "dialog" onSubmit={handleSubmit}>
-            <div className="flex flex-col justify-center items-center mb-4">
-              <p className="text-red-500">
-                Are you sure you want to delete this client?
-              </p>
-              <button className="btn btn-error mt-10" onClick={onSubmit}>
-                Delete Client
-              </button>
-            </div>
+          ) : (
+            <form method="dialog" onSubmit={handleSubmit}>
+              <div className="flex flex-col justify-center items-center mb-4">
+                <p className="text-red-500">
+                  Are you sure you want to delete this client?
+                </p>
+                <button className="btn btn-error mt-10" onClick={onSubmit}>
+                  Delete Client
+                </button>
+              </div>
             </form>
-         
-        )}
+          )}
 
-        {/* Submit button  <button
+          {/* Submit button  <button
           type="button"
           onClick={
             mode === "add"
@@ -221,8 +266,8 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
             ? "Save Changes"
             : "Delete Client"}
         </button>*/}
-      </div>
-    </dialog>
-  </>
+        </div>
+      </dialog>
+    </>
   );
 }
