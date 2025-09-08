@@ -1,8 +1,10 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import "./App.css";
 import ModalForm from "./components/ModalForm";
 import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
+import Login from "./components/Login";
 import axios from "axios";
 
 function App() {
@@ -10,7 +12,7 @@ function App() {
   const [modalMode, setModalMode] = useState("add");
   const [searchTerm, setSearchTerm] = useState("");
   const [clientData, setClientData] = useState(null);
-
+  const isAuthenticated = !!localStorage.getItem("token");
   // Accept both mode and client from TableList
   const handleOpen = (mode, client = null) => {
     setIsOpen(true);
@@ -56,6 +58,13 @@ function App() {
 
   return (
     <>
+     <Router>
+      <Routes>
+        <Route path="/login" element={<Login onLogin={() => window.location.href = "/"} />} />
+        <Route path="/" element={isAuthenticated ? <TableList /> : <Navigate to="/login" />} />
+      </Routes>
+    </Router>
+    
       <ModalForm
         isOpen={isOpen}
         onSubmit={handleSubmit}
