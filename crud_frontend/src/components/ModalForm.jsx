@@ -1,11 +1,12 @@
 import { useState, useEffect  } from "react";
 export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData }) {
-   // Don’t render modal when closed
+  
 
    const [name, setName] = useState("");
   const [job, setJob] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
+  const [user_level, setUserLevel] = useState("");
   const [status, setStatus] = useState(false);
 
   const handleStatusChange = (e) => {
@@ -19,6 +20,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
       setJob(clientData.job || "");
       setAge(clientData.age || "");
       setEmail(clientData.email || "");
+      setUserLevel(clientData.user_level || "");
       setStatus(clientData.isactive || false);
     } else if (mode === "add") {
       // reset fields when adding a new client
@@ -26,6 +28,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
       setJob("");
       setAge("");
       setEmail("");
+      setUserLevel("");
       setStatus(false);
     }
   }, [mode, clientData]);
@@ -48,6 +51,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
         job, 
         age, 
         email, 
+        user_level, 
         isactive: status 
       };
       await onSubmit(updatedClientData);
@@ -108,6 +112,13 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
                 Email
                 <input type="email" placeholder="Type here" className="grow" value={email} onChange={(e) => setEmail(e.target.value)}/>
               </label>
+              <select
+                value={user_level} onChange={(e) => setUserLevel(e.target.value)}
+                className="select select-bordered w-80 mt-2"
+              >
+                <option>Manager</option>
+                <option>Staff</option>
+              </select>
 
                <select
                 value={status ? "Active" : "Inactive"}
@@ -145,6 +156,14 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
                 Email
                 <input type="email" placeholder="Type here" className="grow" value={email} onChange={(e) => setEmail(e.target.value)}/>
               </label>
+
+              <select
+                value={user_level} onChange={(e) => setUserLevel(e.target.value)}
+                className="select select-bordered w-80 mt-2"
+              >
+                <option>Manager</option>
+                <option>Staff</option>
+              </select>
 
               <select
                 defaultValue="Pick a color"

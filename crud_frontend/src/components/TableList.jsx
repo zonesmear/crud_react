@@ -75,6 +75,7 @@ export default function TableList({ handleOpen, searchTerm }) {
               <th className="px-6 py-3">Age</th>
               <th className="px-6 py-3">Job</th>
               <th className="px-6 py-3">Email</th>
+               <th className="px-6 py-3">UserLevel</th>
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Action</th>
             </tr>
@@ -87,6 +88,7 @@ export default function TableList({ handleOpen, searchTerm }) {
                 <td className="px-6 py-4">{client.age}</td>
                 <td className="px-6 py-4">{client.job}</td>
                 <td className="px-6 py-4">{client.email}</td>
+                <td className="px-6 py-4">{client.user_level}</td>
                 <td className="px-6 py-4">
                   <button
                     className={`btn rounded-full w-20 ${

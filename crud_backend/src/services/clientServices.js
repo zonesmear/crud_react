@@ -11,13 +11,13 @@ export const getClients = async () => {
 };
 
 export const addClients = async (clientData) => {
-  const { name, job, age, email, isactive } = clientData;
+  const { name, job, age, email, user_level, isactive, create_date } = clientData;
 
   try {
     // Insert into DB
     const { rows } = await query(
-      "INSERT INTO clients_tb (name, job, age, email, isactive) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [name, job, age, email, isactive ?? true] // default to true
+      "INSERT INTO clients_tb (name, job, age, email, user_level, isactive, CURRENT_TIMESTAMP) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [name, job, age, email, user_level, isactive ?? true, create_date ] // default to true
     );
 
     const newClient = rows[0];
