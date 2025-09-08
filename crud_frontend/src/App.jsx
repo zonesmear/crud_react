@@ -58,22 +58,32 @@ function App() {
 
   return (
     <>
-     <Router>
-      <Routes>
-        <Route path="/login" element={<Login onLogin={() => window.location.href = "/"} />} />
-        <Route path="/" element={isAuthenticated ? <TableList /> : <Navigate to="/login" />} />
-      </Routes>
-    </Router>
-    
-      <ModalForm
-        isOpen={isOpen}
-        onSubmit={handleSubmit}
-        onClose={() => setIsOpen(false)}
-        mode={modalMode}
-        clientData={clientData}
-      />
-      <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
-      <TableList handleOpen={handleOpen} searchTerm={searchTerm} />
+    <Router>
+  <Routes>
+    <Route path="/login" element={<Login onLogin={() => window.location.href = "/"} />} />
+
+    <Route
+      path="/"
+      element={
+        isAuthenticated ? (
+          <>
+            <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
+            <TableList handleOpen={handleOpen} searchTerm={searchTerm} />
+            <ModalForm
+              isOpen={isOpen}
+              onSubmit={handleSubmit}
+              onClose={() => setIsOpen(false)}
+              mode={modalMode}
+              clientData={clientData}
+            />
+          </>
+        ) : (
+          <Navigate to="/login" />
+        )
+      }
+    />
+  </Routes>
+</Router>
     </>
   );
 }
