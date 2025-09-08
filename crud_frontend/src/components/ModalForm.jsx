@@ -207,6 +207,7 @@ export default function ModalForm({
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </label>
+                
                 <select
                   value={user_level}
                   onChange={(e) => setUserLevel(e.target.value)}
@@ -215,6 +216,7 @@ export default function ModalForm({
                   <option>Manager</option>
                   <option>Staff</option>
                 </select>
+
                 <select
                   value={status ? "Active" : "Inactive"}
                   onChange={handleStatusChange}
