@@ -40,7 +40,7 @@ export default function ModalForm({ isOpen, onClose, onSubmit, mode, clientData 
 
   try {
     if (mode === "add") {
-      const clientPayload = { name, job, age, email, isactive: status };
+      const clientPayload = { name, job, age, email, user_level, isactive: status };
       await onSubmit(clientPayload);
       console.log("Client added:", clientPayload);
 
