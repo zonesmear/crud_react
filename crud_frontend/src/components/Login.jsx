@@ -10,7 +10,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://crud-react-g32u.onrender.com/api/login",
+        "https://crud-react-g32u.onrender.com/api/auth/login",
         { email, password }
       );
 
