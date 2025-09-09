@@ -6,11 +6,13 @@ export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ loading state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // start loading
 
     try {
       const response = await axios.post(
@@ -21,7 +23,7 @@ export default function Login({ onLogin }) {
       if (response.data.status === "success") {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        onLogin(response.data.user); // sets App.jsx state
+        onLogin(response.data.user);
         navigate("/");
       } else {
         setError(response.data.message || "Invalid email or password");
@@ -29,6 +31,8 @@ export default function Login({ onLogin }) {
     } catch (err) {
       console.error("Login error:", err);
       setError("Login failed. Try again.");
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
@@ -61,9 +65,14 @@ export default function Login({ onLogin }) {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white p-2 rounded flex items-center justify-center disabled:opacity-70"
         >
-          Login
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </div>
