@@ -75,3 +75,42 @@ export const searchClients = async (req, res) => {
     res.status(500).json({ status: 'error', message: "Internal Server Error" });
   }
 };
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const client = await clientService.findClientByEmail(email);
+
+    if (!client) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid email or password" });
+    }
+
+    // validate password
+    const isMatch = await clientService.validatePassword(
+      password,
+      client.password
+    );
+
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid email or password" });
+    }
+
+    // success
+    const { password: _, ...clientData } = client; // remove password from response
+    res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      user: clientData,
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    res
+      .status(500)
+      .json({ status: "error", message: "Server error during login" });
+  }
+};

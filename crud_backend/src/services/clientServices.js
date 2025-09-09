@@ -1,4 +1,5 @@
 import { query } from "../db.js";
+import bcrypt from "bcrypt";
 
 export const getClients = async () => {
   try {
@@ -74,4 +75,22 @@ export const searchClients = async (searchTerm) => {
     console.error("Error searching clients:", err);
     throw new Error("Database search failed");
   }
+};
+
+
+
+export const findClientByEmail = async (email) => {
+  try {
+    const { rows } = await query("SELECT * FROM clients_tb WHERE email = $1", [
+      email,
+    ]);
+    return rows[0];
+  } catch (err) {
+    console.error("Error finding client:", err);
+    throw new Error("Database query failed");
+  }
+};
+
+export const validatePassword = async (plainPassword, hashedPassword) => {
+  return await bcrypt.compare(plainPassword, hashedPassword);
 };

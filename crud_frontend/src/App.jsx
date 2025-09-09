@@ -12,12 +12,15 @@ function App() {
   const [modalMode, setModalMode] = useState("add");
   const [searchTerm, setSearchTerm] = useState("");
   const [clientData, setClientData] = useState(null);
-  const isAuthenticated = !!localStorage.getItem("token");
+
+  // 🔑 Auth state
+  const [user, setUser] = useState(null);
+
   // Accept both mode and client from TableList
   const handleOpen = (mode, client = null) => {
     setIsOpen(true);
     setModalMode(mode);
-    setClientData(client); // store client for edit/delete
+    setClientData(client);
   };
 
   const handleSubmit = async (newClient) => {
@@ -31,7 +34,6 @@ function App() {
       } catch (error) {
         console.error("Error Adding Client:", error);
       }
-      console.log("modal mode is add");
     } else if (modalMode === "edit") {
       try {
         const response = await axios.put(
@@ -42,7 +44,6 @@ function App() {
       } catch (error) {
         console.error("Error Updating Client:", error);
       }
-      console.log("modal mode is edit");
     } else if (modalMode === "delete") {
       try {
         const response = await axios.delete(
@@ -52,39 +53,38 @@ function App() {
       } catch (error) {
         console.error("Error Deleting Client:", error);
       }
-      console.log("modal mode is delete");
     }
   };
 
   return (
-    <>
     <Router>
-  <Routes>
-    <Route path="/login" element={<Login onLogin={() => window.location.href = "/"} />} />
+      <Routes>
+        {/* Login route */}
+        <Route path="/login" element={<Login onLogin={setUser} />} />
 
-    <Route
-      path="/"
-      element={
-        isAuthenticated ? (
-          <>
-            <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
-            <TableList handleOpen={handleOpen} searchTerm={searchTerm} />
-            <ModalForm
-              isOpen={isOpen}
-              onSubmit={handleSubmit}
-              onClose={() => setIsOpen(false)}
-              mode={modalMode}
-              clientData={clientData}
-            />
-          </>
-        ) : (
-          <Navigate to="/login" />
-        )
-      }
-    />
-  </Routes>
-</Router>
-    </>
+        {/* Protected route: only show dashboard if logged in */}
+        <Route
+          path="/"
+          element={
+            user ? (
+              <>
+                <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
+                <TableList handleOpen={handleOpen} searchTerm={searchTerm} />
+                <ModalForm
+                  isOpen={isOpen}
+                  onSubmit={handleSubmit}
+                  onClose={() => setIsOpen(false)}
+                  mode={modalMode}
+                  clientData={clientData}
+                />
+              </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
