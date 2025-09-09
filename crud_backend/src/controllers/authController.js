@@ -1,32 +1,24 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import db from "../db.js"; // your DB connection
-import dotenv from "dotenv";
-dotenv.config();
-const SECRET_KEY = process.env.SECRET_KEY; 
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const query = "SELECT * FROM clients_tb WHERE email = $1";
-    const result = await db.query(query, [email]);
+    // check DB for user
+    const user = await clientService.findByEmail(email);
 
-    if (result.rows.length === 0) {
-      return res.status(400).json({ status: "error", message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ status: "error", message: "User not found" });
     }
 
-    const user = result.rows[0];
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
+    // check password (use bcrypt if hashed)
+    if (user.password !== password) {
       return res.status(401).json({ status: "error", message: "Invalid password" });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "1h" });
-
-    res.json({ status: "success", message: "Login successful", token });
-  } catch (err) {
-    res.status(500).json({ status: "error", message: "Server error" });
+    res.json({
+      status: "success",
+      user: { id: user.id, name: user.name, email: user.email }, // send minimal user info
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: "Login failed" });
   }
 };

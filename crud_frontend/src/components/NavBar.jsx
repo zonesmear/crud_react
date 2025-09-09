@@ -1,4 +1,4 @@
-export default function NavBar({ onOpen, onSearch }) {
+export default function NavBar({ onOpen, onSearch, onLogout }) {
   const handleSearchChange = (e) => {
     onSearch(e.target.value);
   };
@@ -27,6 +27,11 @@ export default function NavBar({ onOpen, onSearch }) {
         <div className="flex-shrink-0">
           <button className="btn btn-primary w-full md:w-auto" onClick={onOpen}>
             Add Client
+          </button>
+        </div>
+        <div className="flex-shrink-0">
+          <button className="btn btn-primary w-full md:w-auto" onClick={onLogout}>
+            Logout
           </button>
         </div>
       </div>

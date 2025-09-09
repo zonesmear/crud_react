@@ -1,17 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
       const response = await axios.post(
         "https://crud-react-g32u.onrender.com/api/login",
@@ -19,42 +15,39 @@ export default function Login({ onLogin }) {
       );
 
       if (response.data.status === "success") {
-        onLogin(response.data.user); // update App.jsx state
-        navigate("/"); // redirect to dashboard
+        const userData = response.data.user;
+        localStorage.setItem("user", JSON.stringify(userData)); // ✅ Save user
+        onLogin(userData); // ✅ Update parent state
       } else {
-        setError(response.data.message || "Invalid email or password");
+        setError(response.data.message || "Invalid login");
       }
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Login failed. Try again.");
+      setError("Login failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-        <h2 className="text-xl font-bold mb-4">Login</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-
+    <div className="flex justify-center items-center h-screen">
+      <form onSubmit={handleSubmit} className="p-6 shadow-lg bg-white rounded">
+        <h2 className="text-2xl mb-4">Login</h2>
+        {error && <p className="text-red-500">{error}</p>}
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-2 mb-2 border rounded"
+          className="input input-bordered w-full mb-2"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 mb-2 border rounded"
+          className="input input-bordered w-full mb-2"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button type="submit" className="btn btn-primary w-full">
           Login
         </button>
       </form>
