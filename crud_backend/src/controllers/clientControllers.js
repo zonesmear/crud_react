@@ -76,7 +76,6 @@ export const searchClients = async (req, res) => {
   }
 };
 
-import * as clientService from "../services/clientServices.js";
 
 export const loginClient = async (req, res) => {
   const { email, password } = req.body;
