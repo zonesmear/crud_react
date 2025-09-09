@@ -1,5 +1,5 @@
 import * as clientService from "../services/clientServices.js";
-
+import bcrypt from "bcrypt";
 export const getClients = async (req, res) => {
   try {
     const clients = await clientService.getClients();
@@ -25,18 +25,34 @@ export const addClients = async (req, res) => {
   }
 };
 
-export const updateClient = async (req, res) => {
+export const updateClient = async (id, clientData) => {
+  const { name, job, age, email, user_level, password, isactive } = clientData;
+
   try {
-    const { id } = req.params;
-    const updatedClient = await clientService.updateClient(id, req.body);
-    if (updatedClient) {
-      res.status(200).json({ status: 'success', data: updatedClient });
+    let queryText, values;
+
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      queryText = `
+        UPDATE clients_tb 
+        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7
+        WHERE id=$8 RETURNING *
+      `;
+      values = [name, job, age, email, user_level, hashedPassword, isactive, id];
     } else {
-      res.status(404).json({ status: 'error', message: "Client not found" });
+      queryText = `
+        UPDATE clients_tb 
+        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, isactive=$6
+        WHERE id=$7 RETURNING *
+      `;
+      values = [name, job, age, email, user_level, isactive, id];
     }
+
+    const { rows } = await query(queryText, values);
+    return rows[0];
   } catch (err) {
     console.error("Error updating client:", err);
-    res.status(500).json({ status: 'error', message: "Internal Server Error" });
+    throw new Error("Database update failed");
   }
 };
 
