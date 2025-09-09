@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import * as clientService from "../services/clientServices.js";
 import bcrypt from "bcrypt";
 export const getClients = async (req, res) => {
@@ -81,19 +82,36 @@ export const loginClient = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ status: "error", message: "Email and password are required" });
+    return res
+      .status(400)
+      .json({ status: "error", message: "Email and password are required" });
   }
 
   try {
     const user = await clientService.loginClient(email, password);
 
     if (!user) {
-      return res.status(401).json({ status: "error", message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid credentials" });
     }
 
-    res.status(200).json({ status: "success", user });
+    // ✅ Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({
+      status: "success",
+      user,
+      token,
+    });
   } catch (err) {
     console.error("Error logging in:", err);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: "error", message: "Internal Server Error" });
   }
 };

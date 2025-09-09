@@ -19,8 +19,10 @@ export default function Login({ onLogin }) {
       );
 
       if (response.data.status === "success") {
-        onLogin(response.data.user); // update App.jsx state
-        navigate("/"); // redirect to dashboard
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        onLogin(response.data.user); // sets App.jsx state
+        navigate("/");
       } else {
         setError(response.data.message || "Invalid email or password");
       }
@@ -32,7 +34,10 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded shadow-md w-80"
+      >
         <h2 className="text-xl font-bold mb-4">Login</h2>
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
@@ -54,7 +59,10 @@ export default function Login({ onLogin }) {
           required
         />
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white p-2 rounded"
+        >
           Login
         </button>
       </form>
