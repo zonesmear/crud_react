@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import ModalForm from "./components/ModalForm";
 import NavBar from "./components/NavBar";
@@ -12,22 +12,11 @@ function App() {
   const [modalMode, setModalMode] = useState("add");
   const [searchTerm, setSearchTerm] = useState("");
   const [clientData, setClientData] = useState(null);
-  const [user, setUser] = useState(null); // 🔑 Auth state
 
-  // Load user from localStorage when app starts
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
+  // 🔑 Auth state
+  const [user, setUser] = useState(null);
 
-  // Handle logout
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem("user"); // ✅ Clear storage
-  };
-
+  // Accept both mode and client from TableList
   const handleOpen = (mode, client = null) => {
     setIsOpen(true);
     setModalMode(mode);
@@ -73,17 +62,13 @@ function App() {
         {/* Login route */}
         <Route path="/login" element={<Login onLogin={setUser} />} />
 
-        {/* Protected route */}
+        {/* Protected route: only show dashboard if logged in */}
         <Route
           path="/"
           element={
             user ? (
               <>
-                <NavBar
-                  onOpen={() => handleOpen("add")}
-                  onSearch={setSearchTerm}
-                  onLogout={handleLogout}
-                />
+                <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
                 <TableList handleOpen={handleOpen} searchTerm={searchTerm} />
                 <ModalForm
                   isOpen={isOpen}
