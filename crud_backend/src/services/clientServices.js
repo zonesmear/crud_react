@@ -94,3 +94,26 @@ export const findClientByEmail = async (email) => {
 export const validatePassword = async (plainPassword, hashedPassword) => {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
+
+export const loginClient = async (email, password) => {
+  try {
+    const { rows } = await query("SELECT * FROM clients_tb WHERE email=$1", [email]);
+    const client = rows[0];
+
+    if (!client) {
+      return null; // email not found
+    }
+
+    const isMatch = await bcrypt.compare(password, client.password);
+    if (!isMatch) {
+      return null; // wrong password
+    }
+
+    // remove password before returning user
+    const { password: _, ...safeUser } = client;
+    return safeUser;
+  } catch (err) {
+    console.error("Error during login:", err);
+    throw new Error("Database login failed");
+  }
+};

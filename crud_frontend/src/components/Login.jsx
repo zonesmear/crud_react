@@ -1,37 +1,38 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  // 🔹 Handle form submit
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const response = await axios.post("https://crud-react-g32u.onrender.com/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://crud-react-g32u.onrender.com/api/login",
+        { email, password }
+      );
 
       if (response.data.status === "success") {
-        onLogin(response.data.user);  // update App.jsx state
-        navigate("/");  // 🔥 redirect to dashboard
+        onLogin(response.data.user); // update App.jsx state
+        navigate("/"); // redirect to dashboard
       } else {
-        setError("Invalid email or password");
+        setError(response.data.message || "Invalid email or password");
       }
     } catch (err) {
+      console.error("Login error:", err);
       setError("Login failed. Try again.");
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-80"
-      >
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
         <h2 className="text-xl font-bold mb-4">Login</h2>
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
@@ -53,10 +54,7 @@ export default function Login({ onLogin }) {
           required
         />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
           Login
         </button>
       </form>

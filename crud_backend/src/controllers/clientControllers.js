@@ -76,41 +76,25 @@ export const searchClients = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+import * as clientService from "../services/clientServices.js";
+
+export const loginClient = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ status: "error", message: "Email and password are required" });
+  }
+
   try {
-    const client = await clientService.findClientByEmail(email);
+    const user = await clientService.loginClient(email, password);
 
-    if (!client) {
-      return res
-        .status(401)
-        .json({ status: "error", message: "Invalid email or password" });
+    if (!user) {
+      return res.status(401).json({ status: "error", message: "Invalid credentials" });
     }
 
-    // validate password
-    const isMatch = await clientService.validatePassword(
-      password,
-      client.password
-    );
-
-    if (!isMatch) {
-      return res
-        .status(401)
-        .json({ status: "error", message: "Invalid email or password" });
-    }
-
-    // success
-    const { password: _, ...clientData } = client; // remove password from response
-    res.status(200).json({
-      status: "success",
-      message: "Login successful",
-      user: clientData,
-    });
+    res.status(200).json({ status: "success", user });
   } catch (err) {
-    console.error("Login error:", err);
-    res
-      .status(500)
-      .json({ status: "error", message: "Server error during login" });
+    console.error("Error logging in:", err);
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 };
