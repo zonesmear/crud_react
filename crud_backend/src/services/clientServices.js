@@ -41,7 +41,9 @@ export const updateClient = async (id, clientData) => {
 
   try {
     const { rows } = await query(
-      "UPDATE clients_tb SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7 WHERE id=$8 RETURNING *",
+      `UPDATE clients_tb 
+       SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7
+       WHERE id=$8 RETURNING *`,
       [name, job, age, email, user_level, password, isactive, id]
     );
     return rows[0];
