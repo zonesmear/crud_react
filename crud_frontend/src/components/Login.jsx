@@ -11,7 +11,7 @@ export default function Login({ onLogin }) {
     e.preventDefault(); // prevent page reload
 
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
+      const response = await axios.post("https://crud-react-g32u.onrender.com/api/login", {
         email,
         password,
       });
