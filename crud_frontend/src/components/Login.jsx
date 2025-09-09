@@ -7,9 +7,8 @@ export default function Login({ onLogin }) {
   const [error, setError] = useState("");
 
   // 🔹 Handle form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent page reload
-
+   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post("https://crud-react-g32u.onrender.com/api/login", {
         email,
@@ -17,13 +16,13 @@ export default function Login({ onLogin }) {
       });
 
       if (response.data.status === "success") {
-        onLogin(response.data.user); // Pass user data to parent
+        onLogin(response.data.user);  // update App.jsx state
+        navigate("/");  // 🔥 redirect to dashboard
       } else {
-        setError(response.data.message || "Invalid credentials");
+        setError("Invalid email or password");
       }
     } catch (err) {
-      console.error("Login failed:", err);
-      setError("Something went wrong. Please try again.");
+      setError("Login failed. Try again.");
     }
   };
 
