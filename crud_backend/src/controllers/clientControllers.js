@@ -13,16 +13,29 @@ export const getClients = async (req, res) => {
 
 export const addClients = async (req, res) => {
   try {
-    const { name, email } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ status: 'error', message: "Name and Email are required" });
+    const { name, email, password, ...rest } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        status: "error", 
+        message: "Name, Email and Password are required" 
+      });
     }
 
-    const newClient = await clientService.addClients(req.body);
-    res.status(201).json({ status: 'success', data: newClient });
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newClient = await clientService.addClients({
+      name,
+      email,
+      password: hashedPassword,
+      ...rest,
+    });
+
+    res.status(201).json({ status: "success", data: newClient });
   } catch (err) {
     console.error("Error adding client:", err);
-    res.status(500).json({ status: 'error', message: "Internal Server Error" });
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 };
 
@@ -34,9 +47,9 @@ export const updateClient = async (req, res) => {
     let updatedData = { ...rest };
 
     // If password is provided, hash it before sending to service
-    if (password) {
-      updatedData.password = await bcrypt.hash(password, 10);
-    }
+   if (password && password.trim() !== "") {
+  updatedData.password = await bcrypt.hash(password, 10);
+}
 
     const updatedClient = await clientService.updateClient(id, updatedData);
 

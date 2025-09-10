@@ -40,6 +40,7 @@ export const addClients = async (clientData) => {
 export const updateClient = async (id, clientData) => {
   const { name, job, age, email, user_level, password, isactive } = clientData;
 
+  
   try {
     const { rows } = await query(
       `UPDATE clients_tb 

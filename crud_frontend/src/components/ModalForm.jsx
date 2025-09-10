@@ -25,7 +25,7 @@ export default function ModalForm({
       setJob(clientData.job || "");
       setAge(clientData.age || "");
       setEmail(clientData.email || "");
-      setPassword(clientData.password || "");
+      setPassword("");
       setUserLevel(clientData.user_level || "");
       setStatus(clientData.isactive || false);
     } else if (mode === "add") {
