@@ -1,7 +1,7 @@
 import express from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { getClients, addClients, updateClient, deleteClient, searchClients } from "../controllers/clientControllers.js";
-import { login } from "../controllers/authController.js";
+import { loginClient } from "../controllers/authController.js";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.delete("/clients/:id", verifyToken, deleteClient);
 router.get("/clients/search", verifyToken, searchClients);
 
 // 🔑 Auth routes
-router.post("/login", login);
+router.post("/login", loginClient);
 
 // ✅ Example protected profile route
 router.get("/profile", verifyToken, (req, res) => {

@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // put in .env
 
-export const login = async (req, res) => {
+export const loginClient = async (req, res) => {
   const { email, password } = req.body;
 
   try {
