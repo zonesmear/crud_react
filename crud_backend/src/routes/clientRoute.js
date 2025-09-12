@@ -1,7 +1,7 @@
 import express from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import * as clientController from "../controllers/clientControllers.js";
-import * as authController from "../controllers/authController.js";
+import * as authControllers from "../controllers/authController.js";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.delete("/clients/:id", verifyToken, clientController.deleteClient);
 router.get("/clients/search", verifyToken, clientController.searchClients);
 
 // 🔑 Auth routes (no token required for login)
-router.post("/login", authController.login);
+router.post("/login", authControllers.login);
 
 // ✅ Example protected profile route
 router.get("/profile", verifyToken, (req, res) => {
