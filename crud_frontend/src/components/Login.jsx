@@ -20,21 +20,18 @@ export default function Login({ onLogin }) {
         { email, password }
       );
 
-      if (response.data.status === "success") {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        onLogin(response.data.user);
-        navigate("/");
-      } else {
-        setError(response.data.message || "Invalid email or password");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Login failed. Try again.");
-    } finally {
-      setLoading(false); // stop loading
+       if (response.data.status === "success") {
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);   // ✅ Save JWT
+      localStorage.setItem("user", JSON.stringify(user));
+      onLogin(user);
+    } else {
+      setError(response.data.message || "Invalid login");
     }
-  };
+  } catch (err) {
+    setError("Login failed. Please try again.");
+  }
+};
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">

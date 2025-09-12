@@ -1,16 +1,23 @@
 import express from "express";
-import * as clientController from '../controllers/clientControllers.js';
-import { authMiddleware } from "../middleware/authMiddleware.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import * as clientController from "../controllers/clientController.js";
+import * as authController from "../controllers/authController.js";
+
 const router = express.Router();
 
-router.get("/clients", clientController.getClients);
-router.post("/clients", clientController.addClients);
-router.put("/clients/:id", clientController.updateClient);
-router.delete("/clients/:id", clientController.deleteClient);
-router.get("/clients/search", clientController.searchClients);
+// 🔒 Protected routes (require JWT)
+router.get("/clients", verifyToken, clientController.getClients);
+router.post("/clients", verifyToken, clientController.addClient);
+router.put("/clients/:id", verifyToken, clientController.updateClient);
+router.delete("/clients/:id", verifyToken, clientController.deleteClient);
+router.get("/clients/search", verifyToken, clientController.searchClients);
 
-router.post("/login", clientController.loginClient);
-router.get("/profile", authMiddleware, (req, res) => {
+// 🔑 Auth routes (no token required for login)
+router.post("/login", authController.login);
+
+// ✅ Example protected profile route
+router.get("/profile", verifyToken, (req, res) => {
   res.json({ status: "success", user: req.user });
 });
+
 export default router;

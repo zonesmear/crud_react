@@ -16,18 +16,29 @@ function App() {
   // 🔑 Auth state
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  }, []);
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-  };
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+}, []);
+
+ const handleLogout = () => {
+  setUser(null);
+  localStorage.removeItem("user");
+  localStorage.removeItem("token"); // ✅ clear token
+};
 
   const handleOpen = (mode, client = null) => {
     setIsOpen(true);
