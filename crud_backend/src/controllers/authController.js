@@ -1,6 +1,7 @@
+import * as clientService from "../services/clientServices.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import * as clientService from "../services/clientServices.js";
+
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // put in .env
 
