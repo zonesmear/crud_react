@@ -21,9 +21,10 @@ export default function Login({ onLogin }) {
       );
 
       if (response.data.status === "success") {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        onLogin(response.data.user);
+        const { token, user } = response.data;
+      localStorage.setItem("token", token);   // ✅ Save JWT
+      localStorage.setItem("user", JSON.stringify(user));
+      onLogin(user);
         navigate("/");
       } else {
         setError(response.data.message || "Invalid email or password");
