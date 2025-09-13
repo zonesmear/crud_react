@@ -13,6 +13,8 @@ export default function ModalForm({
   const [password, setPassword] = useState("");
   const [user_level, setUserLevel] = useState("");
   const [status, setStatus] = useState(false);
+  const [photo, setPhoto] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleStatusChange = (e) => {
     setStatus(e.target.value === "Active");
@@ -28,6 +30,7 @@ export default function ModalForm({
       setPassword("");
       setUserLevel(clientData.user_level || "");
       setStatus(clientData.isactive || false);
+       setPhoto(null);
     } else if (mode === "add") {
       // reset fields when adding a new client
       setName("");
@@ -37,13 +40,42 @@ export default function ModalForm({
       setPassword("");
       setUserLevel("");
       setStatus(false);
+      setPhoto(null);
     }
   }, [mode, clientData]);
 
+    const handleFileChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+  
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     try {
+      let uploadedPhotoUrl = clientData?.photo || null;
+
+      // 🔼 Upload photo if selected
+      if (photo) {
+        const formData = new FormData();
+        formData.append("file", photo);
+
+        const uploadRes = await axios.post(
+          "https://crud-react-g32u.onrender.com/api/upload",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (progressEvent) => {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setUploadProgress(percent);
+            },
+          }
+        );
+
+        uploadedPhotoUrl = uploadRes.data.url; // backend should return URL
+      }
+
       if (mode === "add") {
         const clientPayload = {
           name,
@@ -53,9 +85,9 @@ export default function ModalForm({
           password,
           user_level,
           isactive: status,
+          photo: uploadedPhotoUrl,
         };
         await onSubmit(clientPayload);
-        console.log("Client added:", clientPayload);
       } else if (mode === "edit") {
         const updatedClientData = {
           id: clientData.id,
@@ -66,12 +98,11 @@ export default function ModalForm({
           password,
           user_level,
           isactive: status,
+          photo: uploadedPhotoUrl,
         };
         await onSubmit(updatedClientData);
-        console.log("Client updated:", updatedClientData);
       } else if (mode === "delete") {
-        await onSubmit(clientData.id); // pass only the id
-        console.log("Client deleted:", clientData.id);
+        await onSubmit(clientData.id);
       }
     } catch (error) {
       console.error("Error in handleSubmit:", error);
@@ -106,6 +137,28 @@ export default function ModalForm({
           {mode === "add" ? (
             <form method="dialog" onSubmit={handleSubmit}>
               <div className="flex flex-col justify-center items-center mb-4">
+                   {/* File Upload */}
+              <div className="w-80 mt-4">
+                <label className="block font-medium mb-2">Upload Photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input file-input-bordered w-full"
+                />
+
+                {/* Progress bar */}
+                {uploadProgress > 0 && (
+                  <progress
+                    className="progress progress-primary w-full mt-2"
+                    value={uploadProgress}
+                    max="100"
+                  >
+                    {uploadProgress}%
+                  </progress>
+                )}
+              </div>
+              
                 <label className="input input-bordered flex items-center mt-2 gap-2 w-80">
                   Name
                   <input
@@ -232,7 +285,6 @@ export default function ModalForm({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </label>
-                
                 <select
                   value={user_level}
                   onChange={(e) => setUserLevel(e.target.value)}
@@ -241,7 +293,6 @@ export default function ModalForm({
                   <option>Manager</option>
                   <option>Staff</option>
                 </select>
-
                 <select
                   value={status ? "Active" : "Inactive"}
                   onChange={handleStatusChange}

@@ -30,9 +30,15 @@ export default function NavBar({ user, onOpen, onSearch, onLogout }) {
           >
             ➕ Add
           </button>
+           <button
+            className="btn btn-primary px-4 rounded-lg shadow-md hover:shadow-lg transition w-full md:w-auto"
+            onClick={onLogout}
+          >
+            🚪 Logout
+          </button>
 
           {/* User dropdown with photo + name */}
-          {user && (
+          {/*user && (
             <div className="dropdown dropdown-end">
               <label
                 tabIndex={0}
@@ -60,7 +66,7 @@ export default function NavBar({ user, onOpen, onSearch, onLogout }) {
                 </svg>
               </label>
 
-              {/* Dropdown menu */}
+              {/* Dropdown menu *//*}
               <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 p-2 shadow-lg bg-white rounded-xl w-40 border"
@@ -75,7 +81,7 @@ export default function NavBar({ user, onOpen, onSearch, onLogout }) {
                 </li>
               </ul>
             </div>
-          )}
+          )*/}
         </div>
       </div>
     </nav>
