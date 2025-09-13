@@ -1,4 +1,4 @@
-export default function NavBar({ onOpen, onSearch, onLogout }) {
+export default function NavBar({ user, onOpen, onSearch, onLogout }) {
   const handleSearchChange = (e) => {
     onSearch(e.target.value);
   };
@@ -22,6 +22,15 @@ export default function NavBar({ onOpen, onSearch, onLogout }) {
             />
           </div>
         </div>
+
+        {/* Show logged-in user */}
+        {user && (
+          <div className="flex items-center gap-2">
+            <span className="text-gray-700 font-medium">
+              👋 Welcome, {user.name || user.email}
+            </span>
+          </div>
+        )}
 
         {/* Right side - Add button */}
         <div className="flex-shrink-0">
