@@ -6,7 +6,7 @@ import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
 import Login from "./components/Login";
 import axios from "axios";
-import api from "./api"; //
+
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -14,31 +14,28 @@ function App() {
   const [clientData, setClientData] = useState(null);
 
   // 🔑 Auth state
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null; // ✅ initialize from localStorage
+  });
 
+  // ✅ Attach token to every request
   axios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+    (config) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-  }
-}, []);
-
- const handleLogout = () => {
-  setUser(null);
-  localStorage.removeItem("user");
-  localStorage.removeItem("token"); // ✅ clear token
-};
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token"); // ✅ clear token
+  };
 
   const handleOpen = (mode, client = null) => {
     setIsOpen(true);
