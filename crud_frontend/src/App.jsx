@@ -6,7 +6,7 @@ import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
 import Login from "./components/Login";
 import axios from "axios";
-
+import api from "./api"; //
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");

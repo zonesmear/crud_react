@@ -90,7 +90,7 @@ export const searchClients = async (req, res) => {
   }
 };
 
-
+/*
 export const loginClient = async (req, res) => {
   const { email, password } = req.body;
 
@@ -128,3 +128,4 @@ export const loginClient = async (req, res) => {
       .json({ status: "error", message: "Internal Server Error" });
   }
 };
+*/

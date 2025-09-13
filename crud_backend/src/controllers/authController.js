@@ -1,26 +1,18 @@
 import * as clientService from "../services/clientServices.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 
-
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // put in .env
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 export const loginClient = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await clientService.findByEmail(email);
+    const user = await clientService.loginClient(email, password); // ✅ use loginClient
     if (!user) {
-      return res.status(404).json({ status: "error", message: "User not found" });
+      return res.status(401).json({ status: "error", message: "Invalid email or password" });
     }
 
-    // Compare password (bcrypt if hashed)
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(401).json({ status: "error", message: "Invalid password" });
-    }
-
-    // Create JWT
+    // create token
     const token = jwt.sign(
       { id: user.id, email: user.email },
       JWT_SECRET,
@@ -30,9 +22,10 @@ export const loginClient = async (req, res) => {
     res.json({
       status: "success",
       token,
-      user: { id: user.id, name: user.name, email: user.email }
+      user
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ status: "error", message: "Login failed" });
   }
 };
