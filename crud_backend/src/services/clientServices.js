@@ -11,14 +11,17 @@ export const getClients = async () => {
   }
 };
 
-export const addClients = async (clientData) => {
+export const addClients = async (clientData, file) => {
   const { name, job, age, email, password, user_level, isactive } = clientData;
 
   try {
-    // Insert into DB
+    const photo = file ? `/uploads/clients/${file.filename}` : null;
+
     const { rows } = await query(
-      "INSERT INTO clients_tb (name, job, age, email, password, user_level, isactive, create_date) VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP ) RETURNING *",
-      [name, job, age, email, password, user_level, isactive ?? true ] // default to true
+      `INSERT INTO clients_tb 
+       (name, job, age, email, password, user_level, isactive, photo, create_date) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP) RETURNING *`,
+      [name, job, age, email, password, user_level, isactive ?? true, photo]
     );
 
     const newClient = rows[0];
@@ -37,27 +40,28 @@ export const addClients = async (clientData) => {
   }
 };
 
-export const updateClient = async (id, clientData) => {
+
+export const updateClient = async (id, clientData, file) => {
   const { name, job, age, email, user_level, password, isactive } = clientData;
 
   try {
     let queryText;
     let values;
 
+    const photo = file ? `/uploads/clients/${file.filename}` : null;
+
     if (password && password.trim() !== "") {
-      // 🔑 Password provided → include in update
       queryText = `
         UPDATE clients_tb 
-        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7
-        WHERE id=$8 RETURNING *`;
-      values = [name, job, age, email, user_level, password, isactive, id];
+        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, password=$6, isactive=$7, photo=COALESCE($8, photo)
+        WHERE id=$9 RETURNING *`;
+      values = [name, job, age, email, user_level, password, isactive, photo, id];
     } else {
-      // 🚫 No password provided → exclude from update
       queryText = `
         UPDATE clients_tb 
-        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, isactive=$6
-        WHERE id=$7 RETURNING *`;
-      values = [name, job, age, email, user_level, isactive, id];
+        SET name=$1, job=$2, age=$3, email=$4, user_level=$5, isactive=$6, photo=COALESCE($7, photo)
+        WHERE id=$8 RETURNING *`;
+      values = [name, job, age, email, user_level, isactive, photo, id];
     }
 
     const { rows } = await query(queryText, values);
@@ -67,6 +71,7 @@ export const updateClient = async (id, clientData) => {
     throw new Error("Database update failed");
   }
 };
+
 
 
 export const deleteClient = async (id) => {

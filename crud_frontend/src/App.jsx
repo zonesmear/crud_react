@@ -44,19 +44,41 @@ function App() {
   };
 
   const handleSubmit = async (newClient) => {
+  try {
     if (modalMode === "add") {
-      await axios.post("https://crud-react-g32u.onrender.com/api/clients", newClient);
-    } else if (modalMode === "edit") {
-      await axios.put(
+      const response = await axios.post(
+        "https://crud-react-g32u.onrender.com/api/clients",
+        newClient
+      );
+      /*setTableData((prevData) => [...prevData, response.data.data]);*/
+    } 
+    else if (modalMode === "edit") {
+      const response = await axios.put(
         `https://crud-react-g32u.onrender.com/api/clients/${newClient.id}`,
         newClient
       );
-    } else if (modalMode === "delete") {
+      /*setTableData((prevData) =>
+        prevData.map((client) =>
+          client.id === newClient.id ? response.data.data : client
+        )
+      );*/
+    } 
+    else if (modalMode === "delete") {
       await axios.delete(
         `https://crud-react-g32u.onrender.com/api/clients/${clientData.id}`
       );
+     /* setTableData((prevData) =>
+        prevData.filter((client) => client.id !== clientData.id)
+      );*/
     }
-  };
+
+    setIsOpen(false); // ✅ close modal after success
+  } catch (err) {
+    console.error("Error handling submit:", err);
+    alert("❌ Something went wrong. Please try again.");
+  }
+};
+
 
   return (
     <Router>
